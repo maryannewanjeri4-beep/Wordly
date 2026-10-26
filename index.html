@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordly</title>
+    <link rel ="stylesheet" href="styles.css">
+
+</head>
+
+
+    <body>
+    <main>
+        <header class="site-header">
+            <h1 id="main-header">WORDLY</h1>
+ 
+            <form id="search-form">
+                <label for="word-input"><em>Search for a word</em></label>
+                <input id="word-input" type="text" placeholder="Type a word here...">
+                <button type="submit">Search</button>
+            </form>
+        </header>
+ 
+
+          <p id="message"></p>
+
+          <section id="empty">
+            <h2>Discover the meaning of different words</h2>
+            <p>Search above, or click one of these words:</p>
+            <div class="options">
+                <button class="word-option">serenity</button>
+                <button class="word-option">ephemeral</button>
+                <button class="word-option">luminous</button>
+                <button class="word-option">petrichor</button>
+            </div>
+        </section>
+
+
+         <section id="results" hidden>
+            <h3 id="result-word">Word Placeholder</h3>
+            <p id="result-phonetic"></p>
+ 
+            <div>
+                <button id="audio-button">Play Sound</button>
+                <audio id="audio-player" src=""></audio>
+            </div>
+ 
+            <div id="definitions-container">
+                <em id="result-part-of-speech">part of speech</em>
+                <p id="result-definition">The definition of the word will appear here.</p>
+                <p id="result-example"><em>Example: An example sentence using the word will go here.</em></p>
+                <p id="result-synonyms"></p>
+            </div>
+        </section>
+</main>
+<script src="main.js"></script>
+    </body>
+</html>
+       
