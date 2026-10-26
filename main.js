@@ -74,11 +74,14 @@ fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word
         synonymsText.style.display = "none";
       }
 
-       // Try to find an audio sound link. If it exists, hook it up to our play button.
-      if (wordData.phonetics && wordData.phonetics[0] && wordData.phonetics[0].audio) {
-        audioPlayer.src = wordData.phonetics[0].audio;
+       // Use the first phonetic entry that actually has an audio recording.
+      const audioUrl = wordData.phonetics?.find(phonetic => phonetic.audio?.trim())?.audio;
+      if (audioUrl) {
+        audioPlayer.src = audioUrl.startsWith('//') ? `https:${audioUrl}` : audioUrl;
         audioButton.style.display = "inline-block";
       } else {
+        audioPlayer.removeAttribute('src');
+        audioPlayer.load();
         audioButton.style.display = "none";
       }
 
@@ -96,4 +99,23 @@ fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word
       emptySection.removeAttribute("hidden");
     });
 
+
 }
+//Word options hook up
+const wordOptions = document.querySelectorAll('.word-option');  //to create a nodelist
+wordOptions.forEach(button => {
+  button.addEventListener('click', function() {
+    const targetWord = button.textContent;
+    wordInput.value = targetWord; // Sync text input window automatically
+    searchWord(targetWord);
+  });
+});
+// Trigger Audio Playback Safely
+audioButton.addEventListener('click', function() {
+  if (audioPlayer.src) {
+    audioPlayer.play().catch(() => {
+      messageText.textContent = "Sorry, the pronunciation audio couldn't be played.";
+      messageText.style.color = "red";
+    });
+  }
+})
