@@ -9,10 +9,7 @@ const resultWord = document.getElementById('result-word');
 const resultPhonetic = document.getElementById('result-phonetic');
 const audioButton = document.getElementById('audio-button');
 const audioPlayer = document.getElementById('audio-player');
-const partOfSpeech = document.getElementById('result-part-of-speech');
-const definitionText = document.getElementById('result-definition');
-const exampleText = document.getElementById('result-example');
-const synonymsText = document.getElementById('result-synonyms');
+const definitionsContainer = document.getElementById('definitions-container');
 
 
 //to prevents the page from naturally refreshing we need to store the data the user inputs:
@@ -50,33 +47,57 @@ fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word
         messageText.textContent="";
         //breaking down the data package..........makes the data clean to read
         const wordData = data[0]; 
-      const meaning = wordData.meanings[0];
-      const definition = meaning.definitions[0];
 
 
       //html placeholders are then replaced with text from the server
       resultWord.textContent = wordData.word;
       resultPhonetic.textContent = wordData.phonetic || "";
-      partOfSpeech.textContent = meaning.partOfSpeech;
-      definitionText.textContent = definition.definition;
-      
 
-    //check if there is an example sentence ..if yes place it...if not hide it
-     if (definition.example) {
-        exampleText.textContent = "Example: " + definition.example;
-        exampleText.style.display = "block"; 
-      } else {
-        exampleText.style.display = "none"; 
-      }
+      definitionsContainer.replaceChildren();
+      (wordData.meanings || []).forEach(meaning => {
+        const meaningSection = document.createElement('section');
+        meaningSection.className = 'meaning-group';
 
+        const heading = document.createElement('h4');
+        heading.className = 'meaning-part-of-speech';
+        heading.textContent = meaning.partOfSpeech || 'Meaning';
+        meaningSection.appendChild(heading);
 
-        //Check if synonyms exist. If yes, show them. If no, hide them.
-      if (meaning.synonyms && meaning.synonyms.length > 0) {
-        synonymsText.textContent = "Synonyms: " + meaning.synonyms.join(", ");
-        synonymsText.style.display = "block";
-      } else {
-        synonymsText.style.display = "none";
-      }
+        if (meaning.synonyms?.length) {
+          const synonyms = document.createElement('p');
+          synonyms.className = 'meaning-synonyms';
+          synonyms.textContent = 'Synonyms: ' + meaning.synonyms.join(', ');
+          meaningSection.appendChild(synonyms);
+        }
+
+        (meaning.definitions || []).forEach(definition => {
+          const definitionEntry = document.createElement('article');
+          definitionEntry.className = 'definition-entry';
+
+          const definitionText = document.createElement('p');
+          definitionText.className = 'definition-text';
+          definitionText.textContent = definition.definition;
+          definitionEntry.appendChild(definitionText);
+
+          if (definition.example) {
+            const example = document.createElement('p');
+            example.className = 'definition-example';
+            example.textContent = 'Example: ' + definition.example;
+            definitionEntry.appendChild(example);
+          }
+
+          if (definition.synonyms?.length) {
+            const synonyms = document.createElement('p');
+            synonyms.className = 'definition-synonyms';
+            synonyms.textContent = 'Synonyms: ' + definition.synonyms.join(', ');
+            definitionEntry.appendChild(synonyms);
+          }
+
+          meaningSection.appendChild(definitionEntry);
+        });
+
+        definitionsContainer.appendChild(meaningSection);
+      });
 
        // Use the first phonetic entry that actually has an audio recording.
       const audioUrl = wordData.phonetics?.find(phonetic => phonetic.audio?.trim())?.audio;
