@@ -136,7 +136,13 @@ main {
     padding-top: 20px;
 }
 
-#result-part-of-speech {
+.meaning-group + .meaning-group {
+    border-top: 1px solid #e5e7eb;
+    margin-top: 22px;
+    padding-top: 22px;
+}
+
+.meaning-part-of-speech {
     display: block;
     color: #666666;
     font-weight: bold;
@@ -144,21 +150,28 @@ main {
     margin-bottom: 10px;
 }
 
-#result-definition {
+.definition-text {
     font-size: 18px;
     line-height: 1.6;
     margin-bottom: 15px;
 }
 
-#result-example {
+.definition-example {
     color: #555555;
     margin-bottom: 15px;
     padding-left: 10px;
 }
 
-#result-synonyms {
+.meaning-synonyms,
+.definition-synonyms {
     background-color: #f3f4f6;
     padding: 10px;
     border-radius: 4px;
     display: inline-block;
+    margin-bottom: 15px;
+}
+
+.definition-entry + .definition-entry {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 15px;
 }
