@@ -24,6 +24,10 @@ searchForm.addEventListener("submit", function (event) {
     //if a word is typed
     if (targetWord !== "") {
         searchWord(targetWord);
+    } else {
+      messageText.textContent = "Please type a word.";
+      messageText.style.color = "white";
+      wordInput.focus();
     }
 });
 
