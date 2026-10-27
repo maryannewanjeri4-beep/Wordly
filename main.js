@@ -113,9 +113,23 @@ wordOptions.forEach(button => {
 // Trigger Audio Playback Safely
 audioButton.addEventListener('click', function() {
   if (audioPlayer.src) {
-    audioPlayer.play().catch(() => {
-      messageText.textContent = "Sorry, the pronunciation audio couldn't be played.";
-      messageText.style.color = "red";
-    });
+    audioPlayer.play().catch(speakWord);
+  } else {
+    speakWord();
   }
 })
+
+function speakWord() {
+  if (!('speechSynthesis' in window)) {
+    messageText.textContent = "Sorry, pronunciation audio is unavailable.";
+    messageText.style.color = "red";
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const pronunciation = new SpeechSynthesisUtterance(resultWord.textContent);
+  pronunciation.lang = 'en-US';
+  window.speechSynthesis.speak(pronunciation);
+  messageText.textContent = "Playing spoken pronunciation.";
+  messageText.style.color = "black";
+}
